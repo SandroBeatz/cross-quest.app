@@ -1,14 +1,13 @@
-'use client';
 
 import React, { useState, useEffect } from 'react';
-import { UserProfile, UserStats, GameHistoryEntry } from '@/types';
-import Onboarding from '@/components/Onboarding';
-import Dashboard from '@/components/Dashboard';
-import CrosswordGame from '@/components/CrosswordGame';
-import Settings from '@/components/Settings';
-import Landing from '@/components/Landing';
-import Layout from '@/components/Layout';
-import BottomNav from '@/components/BottomNav';
+import { UserProfile, UserStats, GameHistoryEntry } from './types';
+import Onboarding from './components/Onboarding';
+import Dashboard from './components/Dashboard';
+import CrosswordGame from './components/CrosswordGame';
+import Settings from './components/Settings';
+import Landing from './components/Landing';
+import Layout from './components/Layout';
+import BottomNav from './components/BottomNav';
 
 const INITIAL_STATS: UserStats = {
   points: 0,
@@ -20,7 +19,7 @@ const INITIAL_STATS: UserStats = {
 
 type ViewState = 'LANDING' | 'ONBOARDING' | 'DASHBOARD' | 'GAME' | 'SETTINGS';
 
-export default function Home() {
+const App: React.FC = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [view, setView] = useState<ViewState>('LANDING');
   const [loading, setLoading] = useState(true);
@@ -161,4 +160,6 @@ export default function Home() {
       />
     </Layout>
   );
-}
+};
+
+export default App;

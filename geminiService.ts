@@ -1,19 +1,8 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
-import { CrosswordData, Direction } from "@/types";
+import { CrosswordData, Direction } from "./types";
 
-// Initialize GoogleGenAI lazily to avoid SSR issues
-let ai: GoogleGenAI | null = null;
-
-function getAI() {
-  if (!ai) {
-    const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-    if (!apiKey) {
-      throw new Error("Gemini API key is not configured");
-    }
-    ai = new GoogleGenAI({ apiKey });
-  }
-  return ai;
-}
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const CROSSWORD_SCHEMA = {
   type: Type.OBJECT,
@@ -50,7 +39,7 @@ export async function generateCrossword(categories: string[]): Promise<Crossword
 3. Координаты 0-9.
 4. JSON: title, gridSize, items. Direction: 'H' или 'V'.`;
 
-  const response = await getAI().models.generateContent({
+  const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
     contents: prompt,
     config: {
@@ -61,10 +50,7 @@ export async function generateCrossword(categories: string[]): Promise<Crossword
   });
 
   try {
-    const text = response.text?.trim() || "";
-    if (!text) {
-      throw new Error("Empty response from Gemini");
-    }
+    const text = response.text.trim();
     const data = JSON.parse(text);
     data.items = data.items.map((item: any) => ({
       ...item,

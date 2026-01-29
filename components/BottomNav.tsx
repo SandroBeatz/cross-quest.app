@@ -1,5 +1,3 @@
-'use client';
-
 
 import React from 'react';
 import { Home, Plus, Settings as SettingsIcon } from 'lucide-react';
