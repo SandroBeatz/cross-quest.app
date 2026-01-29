@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { CATEGORIES } from '../types';
-import { BrainCircuit, CheckCircle2, Sparkles, Book, History, Palette, Film, Cpu, Globe, Trophy, Music, Leaf, Utensils, FlaskConical, User } from 'lucide-react';
+import { BrainCircuit, CheckCircle2, Sparkles, Book, History, Palette, Film, Cpu, Globe, Trophy, Music, Leaf, Utensils, FlaskConical, User, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const MotionDiv = motion.div as any;
@@ -9,6 +9,7 @@ const MotionButton = motion.button as any;
 
 interface OnboardingProps {
   onComplete: (data: { username: string; categories: string[] }) => void;
+  onCancel: () => void;
 }
 
 const CATEGORY_CONFIG: Record<string, { icon: any, color: string, bg: string }> = {
@@ -25,7 +26,7 @@ const CATEGORY_CONFIG: Record<string, { icon: any, color: string, bg: string }> 
   'Природа': { icon: Leaf, color: 'text-green-600', bg: 'bg-green-100' }
 };
 
-const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
+const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onCancel }) => {
   const [step, setStep] = useState<1 | 2>(1);
   const [username, setUsername] = useState('');
   const [selected, setSelected] = useState<string[]>([]);
@@ -51,6 +52,13 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
         animate={{ scale: 1, opacity: 1 }}
         className="max-w-4xl w-full bg-white rounded-[3rem] shadow-[0_32px_64px_rgba(0,0,0,0.4)] overflow-hidden p-8 sm:p-12 text-center relative border-b-[12px] border-indigo-200/50 my-8"
       >
+        <button 
+          onClick={step === 2 ? () => setStep(1) : onCancel}
+          className="absolute top-8 left-8 p-4 bg-slate-50 text-slate-400 rounded-2xl hover:bg-slate-100 transition-all"
+        >
+          <ArrowLeft className="w-6 h-6" />
+        </button>
+
         <div className="flex justify-center mb-6">
           <MotionDiv 
             animate={{ rotate: [0, -5, 5, 0] }}
@@ -101,7 +109,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                {CATEGORIES.map((cat, idx) => {
+                {CATEGORIES.map((cat) => {
                   const isSelected = selected.includes(cat);
                   const config = CATEGORY_CONFIG[cat] || { icon: Sparkles, color: 'text-indigo-500', bg: 'bg-indigo-50' };
                   const Icon = config.icon;
@@ -120,7 +128,6 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                         }
                       `}
                     >
-                      {/* Fix: Added missing closing quote and bracket for template literal in className */}
                       <div className={`p-3 rounded-2xl transition-colors ${isSelected ? 'bg-indigo-500 text-white' : `${config.bg} ${config.color}`}`}>
                         <Icon className="w-5 h-5" />
                       </div>

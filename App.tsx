@@ -5,6 +5,7 @@ import Onboarding from './components/Onboarding';
 import Dashboard from './components/Dashboard';
 import CrosswordGame from './components/CrosswordGame';
 import Settings from './components/Settings';
+import Landing from './components/Landing';
 import Layout from './components/Layout';
 import BottomNav from './components/BottomNav';
 
@@ -16,15 +17,20 @@ const INITIAL_STATS: UserStats = {
   totalSolved: 0,
 };
 
+type ViewState = 'LANDING' | 'ONBOARDING' | 'DASHBOARD' | 'GAME' | 'SETTINGS';
+
 const App: React.FC = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [view, setView] = useState<'DASHBOARD' | 'GAME' | 'SETTINGS'>('DASHBOARD');
+  const [view, setView] = useState<ViewState>('LANDING');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const saved = localStorage.getItem('intellect_crossword_profile');
     if (saved) {
       setProfile(JSON.parse(saved));
+      setView('DASHBOARD');
+    } else {
+      setView('LANDING');
     }
     setLoading(false);
   }, []);
@@ -42,6 +48,7 @@ const App: React.FC = () => {
       history: []
     };
     saveProfile(newProfile);
+    setView('DASHBOARD');
   };
 
   const handleGameComplete = (score: number, title: string) => {
@@ -84,21 +91,45 @@ const App: React.FC = () => {
         lastPlayed: today,
         totalSolved: profile.stats.totalSolved + 1
       },
-      history: [historyEntry, ...profile.history].slice(0, 20) // Keep last 20
+      history: [historyEntry, ...profile.history].slice(0, 20)
     };
 
     saveProfile(updatedProfile);
     setView('DASHBOARD');
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center font-game font-bold">Загрузка...</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center font-game font-bold">Загрузка нейронной сети...</div>;
 
-  if (!profile) {
-    return <Onboarding onComplete={handleOnboardingComplete} />;
+  // Render Landing separately if no profile or explicitly on Landing
+  if (view === 'LANDING') {
+    return (
+      <Layout 
+        stats={profile?.stats} 
+        username={profile?.username} 
+        onLogoClick={() => setView('LANDING')}
+        onAccountClick={() => setView('DASHBOARD')}
+      >
+        <Landing 
+          isLoggedIn={!!profile} 
+          onStart={() => profile ? setView('DASHBOARD') : setView('ONBOARDING')} 
+        />
+      </Layout>
+    );
   }
 
+  if (view === 'ONBOARDING' && !profile) {
+    return <Onboarding onComplete={handleOnboardingComplete} onCancel={() => setView('LANDING')} />;
+  }
+
+  if (!profile) return <Landing isLoggedIn={false} onStart={() => setView('ONBOARDING')} />;
+
   return (
-    <Layout stats={profile.stats} username={profile.username}>
+    <Layout 
+      stats={profile.stats} 
+      username={profile.username}
+      onLogoClick={() => setView('LANDING')}
+      onAccountClick={() => setView('DASHBOARD')}
+    >
       <div className="pb-24 md:pb-8">
         {view === 'DASHBOARD' && (
           <Dashboard 
@@ -124,8 +155,8 @@ const App: React.FC = () => {
         )}
       </div>
       <BottomNav 
-        activeView={view} 
-        onViewChange={setView} 
+        activeView={view === 'GAME' ? 'GAME' : view === 'SETTINGS' ? 'SETTINGS' : 'DASHBOARD'} 
+        onViewChange={(v) => setView(v as any)} 
       />
     </Layout>
   );
