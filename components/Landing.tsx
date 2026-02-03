@@ -55,7 +55,7 @@ const Landing: React.FC<LandingProps> = ({ onStart, isLoggedIn }) => {
             onClick={onStart}
             className="px-8 md:px-10 py-4 md:py-5 bg-stone-800 text-white rounded-2xl font-black text-base md:text-lg shadow-xl shadow-orange-200 uppercase tracking-widest flex items-center gap-3 md:gap-4 mx-auto group"
           >
-            <span className="text-sm md:text-base">{isLoggedIn ? 'Вернуться в игру' : 'Начать играть'}</span>
+            {isLoggedIn ? 'Вернуться в игру' : 'Начать играть'}
             <div className="bg-orange-500 p-1.5 rounded-full group-hover:rotate-45 transition-transform">
               <Zap className="w-3.5 h-3.5 md:w-4 md:h-4 fill-white text-white" />
             </div>
@@ -113,7 +113,7 @@ const Landing: React.FC<LandingProps> = ({ onStart, isLoggedIn }) => {
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="relative px-4"
+          className="relative"
         >
           <div className="bg-gradient-to-br from-orange-500 to-amber-500 rounded-3xl p-8 md:p-10 aspect-video flex items-center justify-center shadow-2xl">
             <Brain className="w-full h-full text-white/10 absolute rotate-12" />
