@@ -78,13 +78,13 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onCancel }) => {
   };
 
   return (
-    <div className="min-h-screen bg-indigo-700 flex items-center justify-center p-4 sm:p-6 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-500 via-indigo-700 to-indigo-900 overflow-y-auto">
-      <MotionDiv 
+    <div className="min-h-screen bg-orange-500 flex items-center justify-center p-4 sm:p-6 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-orange-400 via-orange-500 to-amber-600 overflow-y-auto">
+      <MotionDiv
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="max-w-4xl w-full bg-white rounded-[3rem] shadow-[0_32px_64px_rgba(0,0,0,0.4)] overflow-hidden p-8 sm:p-12 text-center relative border-b-[12px] border-indigo-200/50 my-8"
+        className="max-w-4xl w-full bg-white rounded-[3rem] shadow-[0_32px_64px_rgba(0,0,0,0.4)] overflow-hidden p-8 sm:p-12 text-center relative border-b-[12px] border-orange-200/50 my-8"
       >
-        <button 
+        <button
           onClick={step === 2 ? () => setStep(1) : onCancel}
           className="absolute top-8 left-8 p-4 bg-slate-50 text-slate-400 rounded-2xl hover:bg-slate-100 transition-all"
         >
@@ -92,12 +92,12 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onCancel }) => {
         </button>
 
         <div className="flex justify-center mb-6">
-          <MotionDiv 
-            animate={{ rotate: [0, -5, 5, 0] }}
-            transition={{ repeat: Infinity, duration: 5 }}
-            className="bg-gradient-to-br from-indigo-500 to-purple-600 p-6 rounded-[2rem] shadow-2xl"
+          <MotionDiv
+            animate={{ y: [0, -8, 0], rotate: [0, -3, 3, 0] }}
+            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+            className="w-24 h-24 rounded-[2rem] shadow-2xl overflow-hidden"
           >
-            <BrainCircuit className="w-12 h-12 text-white" />
+            <img src="/logo.png" alt="Умняут" className="w-full h-full object-cover" />
           </MotionDiv>
         </div>
         
@@ -111,8 +111,8 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onCancel }) => {
               className="space-y-8"
             >
               <div>
-                <h1 className="text-3xl sm:text-4xl font-game font-bold text-slate-800 mb-2">Добро пожаловать!</h1>
-                <p className="text-slate-500 font-medium">Как нам тебя называть?</p>
+                <h1 className="text-3xl sm:text-4xl font-game font-bold text-stone-800 mb-2">Привет! Я Умняут!</h1>
+                <p className="text-stone-500 font-medium">Как тебя зовут?</p>
               </div>
 
               <div className="relative max-w-sm mx-auto">
@@ -123,7 +123,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onCancel }) => {
                   onChange={(e) => setUsername(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleNext()}
                   placeholder="Твое имя..."
-                  className="w-full bg-slate-50 border-4 border-slate-100 rounded-3xl px-8 py-6 text-2xl font-black text-slate-800 outline-none focus:border-indigo-400 transition-all text-center"
+                  className="w-full bg-slate-50 border-4 border-slate-100 rounded-3xl px-8 py-6 text-2xl font-black text-stone-800 outline-none focus:border-orange-400 transition-all text-center"
                 />
               </div>
             </MotionDiv>
@@ -136,8 +136,8 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onCancel }) => {
               className="space-y-8"
             >
               <div>
-                <h1 className="text-3xl sm:text-4xl font-game font-bold text-slate-800 mb-2">Отлично, {username}!</h1>
-                <p className="text-slate-500 font-medium">Выбери темы для своих кроссвордов</p>
+                <h1 className="text-3xl sm:text-4xl font-game font-bold text-stone-800 mb-2">Мяу, {username}! Отличное имя!</h1>
+                <p className="text-stone-500 font-medium">Выбери темы, которые тебе интересны</p>
               </div>
 
               {loading ? (
@@ -168,20 +168,20 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onCancel }) => {
                           className={`
                             p-4 rounded-[2rem] border-4 transition-all flex flex-col items-center justify-center gap-2 relative
                             ${isSelected 
-                              ? 'border-indigo-500 bg-indigo-50 shadow-lg' 
-                              : 'border-slate-50 bg-slate-50 hover:bg-white hover:border-indigo-100'
+                              ? 'border-orange-500 bg-orange-50 shadow-lg' 
+                              : 'border-slate-50 bg-slate-50 hover:bg-white hover:border-orange-100'
                             }
                           `}
                         >
-                          <div className={`p-3 rounded-2xl transition-colors ${isSelected ? 'bg-indigo-500 text-white' : 'bg-slate-200 text-slate-400'}`}>
+                          <div className={`p-3 rounded-2xl transition-colors ${isSelected ? 'bg-orange-500 text-white' : 'bg-slate-200 text-slate-400'}`}>
                             <Icon className="w-5 h-5" />
                           </div>
-                          <span className={`font-black text-[10px] uppercase tracking-wider ${isSelected ? 'text-indigo-700' : 'text-slate-500'}`}>
+                          <span className={`font-black text-[10px] uppercase tracking-wider ${isSelected ? 'text-orange-700' : 'text-slate-500'}`}>
                             {cat.name}
                           </span>
                           <div className="w-full mt-1">
                             <div className="flex justify-between text-[8px] font-bold mb-1">
-                              <span className={isSelected ? 'text-indigo-400' : 'text-slate-400'}>
+                              <span className={isSelected ? 'text-orange-400' : 'text-slate-400'}>
                                 {cat.guessed_percent || 0}%
                               </span>
                             </div>
@@ -216,7 +216,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onCancel }) => {
             className={`
               w-full sm:w-auto px-16 py-6 rounded-3xl font-black text-xl transition-all shadow-xl uppercase tracking-widest
               ${(step === 1 ? username.trim() : selected.length > 0) && !loading
-                ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white border-b-8 border-indigo-800' 
+                ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white border-b-8 border-orange-700' 
                 : 'bg-slate-200 text-slate-400 cursor-not-allowed border-b-8 border-slate-300'
               }
             `}

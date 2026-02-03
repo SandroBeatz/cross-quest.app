@@ -24,7 +24,7 @@ const Dashboard: React.FC<DashboardProps> = ({ profile, onStartGame }) => {
     score: entry.score
   }));
 
-  const COLORS = ['#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#ec4899'];
+  const COLORS = ['#f97316', '#fb923c', '#fbbf24', '#facc15', '#38bdf8'];
 
   const calculateDifficulty = (level: number): 'easy' | 'medium' | 'hard' => {
     if (level === 1) return 'easy';
@@ -59,23 +59,23 @@ const Dashboard: React.FC<DashboardProps> = ({ profile, onStartGame }) => {
   return (
     <div className="space-y-8">
       {/* Hero Action */}
-      <MotionDiv 
+      <MotionDiv
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-800 rounded-[2rem] p-8 md:p-12 text-white relative overflow-hidden shadow-xl"
+        className="bg-gradient-to-br from-orange-500 via-orange-600 to-amber-600 rounded-[2rem] p-8 md:p-12 text-white relative overflow-hidden shadow-xl"
       >
         <div className="relative z-10 max-w-xl">
           <MotionDiv className="flex items-center gap-2 mb-4 bg-white/10 w-fit px-3 py-1.5 rounded-full backdrop-blur-md">
-            <Cpu className="w-4 h-4 text-indigo-200" />
-            <span className="uppercase tracking-widest text-[8px] font-black text-indigo-100">Нейро-инициализация</span>
+            <Cpu className="w-4 h-4 text-orange-200" />
+            <span className="uppercase tracking-widest text-[8px] font-black text-orange-100">Умняут думает...</span>
           </MotionDiv>
-          
+
           <h2 className="text-3xl md:text-5xl font-game font-bold mb-4 leading-tight tracking-tight">
             Готовы к новому <br/> испытанию?
           </h2>
-          
-          <p className="text-indigo-100 mb-8 text-sm md:text-base opacity-80 font-medium">
-            ИИ готов синтезировать персональную головоломку на основе ваших интересов.
+
+          <p className="text-orange-100 mb-8 text-sm md:text-base opacity-80 font-medium">
+            Умняут готов создать персональную головоломку на основе ваших интересов.
           </p>
 
           <div className="flex flex-col sm:flex-row items-start gap-4">
@@ -84,16 +84,16 @@ const Dashboard: React.FC<DashboardProps> = ({ profile, onStartGame }) => {
               whileTap={{ scale: 0.98 }}
               onClick={handleGenerate}
               disabled={isGenerating}
-              className="group bg-white text-indigo-700 px-8 py-4 rounded-2xl font-black text-lg flex items-center gap-4 shadow-lg disabled:opacity-50"
+              className="group bg-white text-orange-600 px-8 py-4 rounded-2xl font-black text-lg flex items-center gap-4 shadow-lg disabled:opacity-50"
             >
               {isGenerating ? (
                 <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-4 border-orange-200 border-t-orange-600 rounded-full animate-spin" />
                   ГЕНЕРАЦИЯ...
                 </div>
               ) : (
                 <>
-                  <div className="bg-indigo-600 p-1.5 rounded-full group-hover:rotate-90 transition-transform">
+                  <div className="bg-orange-500 p-1.5 rounded-full group-hover:rotate-90 transition-transform">
                     <Play className="w-4 h-4 fill-white text-white translate-x-0.5" />
                   </div>
                   СГЕНЕРИРОВАТЬ
@@ -133,10 +133,10 @@ const Dashboard: React.FC<DashboardProps> = ({ profile, onStartGame }) => {
               <Sparkles className="w-6 h-6 text-emerald-400" />
             </div>
             <div className="bg-slate-900 p-6 rounded-2xl text-white">
-              <span className="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-1 block">Стрик</span>
+              <span className="text-[9px] font-black text-orange-400 uppercase tracking-widest mb-1 block">Стрик</span>
               <div className="flex items-center gap-2">
                 <span className="text-2xl font-black">{stats.streak}</span>
-                <span className="text-indigo-300 font-bold uppercase text-[9px]">Дней</span>
+                <span className="text-orange-300 font-bold uppercase text-[9px]">Дней</span>
               </div>
             </div>
           </div>
@@ -167,13 +167,13 @@ const Dashboard: React.FC<DashboardProps> = ({ profile, onStartGame }) => {
                     <div key={cat} className="space-y-1.5">
                       <div className="flex justify-between items-end">
                         <span className="font-bold text-slate-700 text-[10px] uppercase tracking-wider">{cat}</span>
-                        <span className="text-[9px] font-black text-indigo-600">{percent}%</span>
+                        <span className="text-[9px] font-black text-orange-600">{percent}%</span>
                       </div>
                       <div className="h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
                         <MotionDiv 
                           initial={{ width: 0 }}
                           animate={{ width: `${percent}%` }}
-                          className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full"
+                          className="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full"
                         />
                       </div>
                     </div>
@@ -187,7 +187,7 @@ const Dashboard: React.FC<DashboardProps> = ({ profile, onStartGame }) => {
         <div className="space-y-6">
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 h-[420px] flex flex-col">
             <h3 className="font-black text-slate-800 text-xs uppercase tracking-widest mb-5 flex items-center gap-2">
-              <History className="w-4 h-4 text-indigo-500" />
+              <History className="w-4 h-4 text-orange-500" />
               История
             </h3>
             <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
@@ -195,11 +195,11 @@ const Dashboard: React.FC<DashboardProps> = ({ profile, onStartGame }) => {
                 <div 
                   key={entry.id} 
                   onClick={() => setSelectedHistory(entry)}
-                  className="p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-indigo-200 cursor-pointer transition-all"
+                  className="p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-orange-200 cursor-pointer transition-all"
                 >
                   <div className="flex justify-between items-start mb-1">
                     <span className="font-bold text-slate-800 text-xs truncate max-w-[100px]">{entry.title}</span>
-                    <span className="text-indigo-600 font-black text-[10px]">+{entry.score}</span>
+                    <span className="text-orange-600 font-black text-[10px]">+{entry.score}</span>
                   </div>
                   <div className="text-[9px] font-bold text-slate-400 flex items-center gap-2">
                     <Calendar className="w-2.5 h-2.5"/> {entry.date}
@@ -223,7 +223,7 @@ const Dashboard: React.FC<DashboardProps> = ({ profile, onStartGame }) => {
               <div className="grid grid-cols-2 gap-4 py-6 border-y border-slate-100">
                 <div>
                   <div className="text-[8px] font-black text-slate-400 uppercase">Очки</div>
-                  <div className="text-lg font-black text-indigo-600">+{selectedHistory.score}</div>
+                  <div className="text-lg font-black text-orange-600">+{selectedHistory.score}</div>
                 </div>
                 <div>
                   <div className="text-[8px] font-black text-slate-400 uppercase">Время</div>

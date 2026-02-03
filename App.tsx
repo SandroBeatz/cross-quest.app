@@ -25,7 +25,7 @@ const App: React.FC = () => {
   const [currentCrossword, setCurrentCrossword] = useState<CrosswordData | null>(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem('intellect_crossword_profile');
+    const saved = localStorage.getItem('umnyaut_profile');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -48,7 +48,7 @@ const App: React.FC = () => {
 
   const saveProfile = (newProfile: UserProfile) => {
     setProfile(newProfile);
-    localStorage.setItem('intellect_crossword_profile', JSON.stringify(newProfile));
+    localStorage.setItem('umnyaut_profile', JSON.stringify(newProfile));
   };
 
   const handleOnboardingComplete = (data: { username: string; categories: string[] }) => {
@@ -128,7 +128,7 @@ const App: React.FC = () => {
     setView('DASHBOARD');
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center font-game font-bold">Загрузка КроссКвест...</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center font-game font-bold text-orange-600">Загрузка Умняут...</div>;
 
   return (
     <Layout 

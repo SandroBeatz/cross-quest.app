@@ -29,15 +29,15 @@ const HintPopup: React.FC<{
       <p className="text-slate-600 font-medium leading-relaxed mb-6">{hint}</p>
 
       {showLetters && letters && (
-        <div className="bg-violet-50 rounded-xl p-4 mb-6">
-          <p className="text-[10px] font-bold text-violet-400 uppercase tracking-widest mb-2">Буквы слова</p>
-          <p className="font-mono tracking-[0.3em] text-xl text-violet-700 font-black">{letters}</p>
+        <div className="bg-sky-50 rounded-xl p-4 mb-6">
+          <p className="text-[10px] font-bold text-sky-400 uppercase tracking-widest mb-2">Буквы слова</p>
+          <p className="font-mono tracking-[0.3em] text-xl text-sky-700 font-black">{letters}</p>
         </div>
       )}
 
       <div className="flex gap-3">
         {!showLetters && (
-          <button onClick={onShowLetters} className="flex-1 py-4 bg-violet-100 text-violet-600 rounded-xl font-black">
+          <button onClick={onShowLetters} className="flex-1 py-4 bg-sky-100 text-sky-600 rounded-xl font-black">
             БУКВЫ
           </button>
         )}
@@ -243,14 +243,14 @@ const CrosswordGame: React.FC<CrosswordGameProps> = ({ profile, crosswordData, o
     <div className="flex flex-col gap-6" onClick={handleOutsideClick}>
       <div className="flex justify-center -mt-4" onClick={(e) => e.stopPropagation()}>
         <div className="inline-flex items-center bg-white rounded-full px-6 py-3 shadow-lg border border-slate-100 divide-x divide-slate-100 gap-6">
-          <div className="flex items-center gap-2.5 text-indigo-600 font-bold text-xl">
+          <div className="flex items-center gap-2.5 text-orange-600 font-bold text-xl">
             <Clock className="w-5 h-5" />
             <span>{formatTime(timer)}</span>
             <button
               onClick={() => setIsPaused(p => !p)}
-              className="ml-2 w-8 h-8 rounded-full bg-indigo-100 hover:bg-indigo-200 flex items-center justify-center transition-colors"
+              className="ml-2 w-8 h-8 rounded-full bg-orange-100 hover:bg-orange-200 flex items-center justify-center transition-colors"
             >
-              {isPaused ? <Play className="w-4 h-4 text-indigo-600" /> : <Pause className="w-4 h-4 text-indigo-600" />}
+              {isPaused ? <Play className="w-4 h-4 text-orange-600" /> : <Pause className="w-4 h-4 text-orange-600" />}
             </button>
           </div>
           <div className="pl-6 text-slate-800 font-bold text-xs uppercase tracking-widest">
@@ -265,7 +265,7 @@ const CrosswordGame: React.FC<CrosswordGameProps> = ({ profile, crosswordData, o
             <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm rounded-3xl flex items-center justify-center z-20">
               <button
                 onClick={() => setIsPaused(false)}
-                className="flex items-center gap-3 px-8 py-4 bg-indigo-500 hover:bg-indigo-600 text-white rounded-2xl font-black text-lg shadow-xl transition-colors"
+                className="flex items-center gap-3 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-black text-lg shadow-xl transition-colors"
               >
                 <Play className="w-6 h-6" />
                 ПРОДОЛЖИТЬ
@@ -295,19 +295,19 @@ const CrosswordGame: React.FC<CrosswordGameProps> = ({ profile, crosswordData, o
                 <div key={`${r}-${c}`} onClick={() => handleCellClick(r, c)}
                   className={`relative aspect-square flex items-center justify-center rounded-lg transition-all border-b-2
                     ${cellIsSolved ? `bg-emerald-500 border-emerald-700 ${cellHasUnsolved ? 'cursor-pointer' : 'cursor-not-allowed'}` :
-                      isFocused ? 'bg-indigo-500 border-indigo-700 z-10 shadow-lg scale-105 cursor-pointer ring-4 ring-indigo-300' :
-                      isHighlighted ? 'bg-indigo-100 border-indigo-300 cursor-pointer' :
+                      isFocused ? 'bg-orange-500 border-orange-600 z-10 shadow-lg scale-105 cursor-pointer ring-4 ring-orange-300' :
+                      isHighlighted ? 'bg-orange-100 border-orange-300 cursor-pointer' :
                       val ? 'bg-slate-700 border-slate-800 cursor-pointer' : 'bg-white border-slate-200 cursor-pointer'}
                   `}>
                   {cellNumber && (
                     <span className={`absolute top-0.5 left-1 text-[8px] font-bold ${
-                      cellIsSolved || isFocused ? 'text-white/70' : isHighlighted ? 'text-indigo-500' : 'text-slate-500'
+                      cellIsSolved || isFocused ? 'text-white/70' : isHighlighted ? 'text-orange-500' : 'text-slate-500'
                     }`}>
                       {cellNumber}
                     </span>
                   )}
                   <span className={`text-sm sm:text-lg md:text-xl font-black uppercase ${
-                    cellIsSolved || isFocused ? 'text-white' : isHighlighted ? 'text-indigo-900' : val ? 'text-white' : 'text-slate-900'
+                    cellIsSolved || isFocused ? 'text-white' : isHighlighted ? 'text-orange-900' : val ? 'text-white' : 'text-slate-900'
                   }`}>
                     {val}
                   </span>
@@ -324,7 +324,7 @@ const CrosswordGame: React.FC<CrosswordGameProps> = ({ profile, crosswordData, o
               <MotionDiv key={activeWord.idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
                 <div className="flex justify-between items-start">
                   <div>
-                    <span className="text-[9px] font-black text-indigo-500 uppercase tracking-widest">{activeWord.direction}</span>
+                    <span className="text-[9px] font-black text-orange-500 uppercase tracking-widest">{activeWord.direction}</span>
                     <span className="block text-[8px] font-bold text-slate-400 uppercase">{activeWord.length} букв</span>
                   </div>
                   <button onClick={() => {
@@ -344,7 +344,7 @@ const CrosswordGame: React.FC<CrosswordGameProps> = ({ profile, crosswordData, o
 
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col max-h-[500px]">
             <div className="px-6 py-4 border-b border-slate-50 flex items-center gap-2">
-               <ListFilter className="w-4 h-4 text-indigo-500" />
+               <ListFilter className="w-4 h-4 text-orange-500" />
                <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-900">Список Вопросов</h3>
             </div>
             <div className="flex-1 overflow-y-auto p-4 custom-scrollbar space-y-6">
@@ -359,10 +359,10 @@ const CrosswordGame: React.FC<CrosswordGameProps> = ({ profile, crosswordData, o
                       return (
                         <div key={w.idx} onClick={() => { setFocusedCell({ r: w.startRow, c: w.startCol }); setActiveDirection(dir); }}
                           className={`p-3 rounded-xl cursor-pointer transition-all border flex items-start gap-3 ${
-                            activeWord?.idx === w.idx && activeDirection === dir ? 'bg-indigo-600 border-indigo-700 text-white shadow-md' :
+                            activeWord?.idx === w.idx && activeDirection === dir ? 'bg-orange-500 border-orange-600 text-white shadow-md' :
                             solvedWordIds.has(w.idx.toString()) ? 'bg-emerald-50 border-emerald-100 text-emerald-900 opacity-60' : 'bg-slate-50 border-transparent hover:bg-white hover:border-slate-200'
                           }`}>
-                          <span className="font-black text-indigo-500 min-w-[20px]">{wordNumber}.</span>
+                          <span className="font-black text-orange-500 min-w-[20px]">{wordNumber}.</span>
                           <span className="text-[11px] font-medium leading-normal line-clamp-2">{w.clue}</span>
                         </div>
                       );

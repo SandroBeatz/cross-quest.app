@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { UserStats, getLevelTitle } from '../types';
-import { BrainCircuit, Flame, Trophy, User, Zap, Sparkles } from 'lucide-react';
+import { Flame, Trophy, User, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const MotionDiv = motion.div as any;
@@ -18,22 +18,22 @@ const Layout: React.FC<LayoutProps> = ({ children, stats, username, onLogoClick,
   const levelTitle = stats ? getLevelTitle(stats.level) : '';
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-900">
-      <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b border-slate-200/50">
+    <div className="min-h-screen bg-orange-50 text-stone-800">
+      <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b border-orange-100/50">
         <div className="max-w-7xl mx-auto px-6 h-16 md:h-20 flex items-center justify-between">
           <button onClick={onLogoClick} className="flex items-center gap-3 md:gap-4 hover:opacity-80 transition-opacity">
-            <MotionDiv 
-              whileHover={{ scale: 1.05 }}
-              className="bg-indigo-600 p-2 md:p-2.5 rounded-xl shadow-lg shadow-indigo-200/50"
+            <MotionDiv
+              whileHover={{ scale: 1.05, rotate: 5 }}
+              className="w-10 h-10 md:w-12 md:h-12 rounded-xl overflow-hidden shadow-lg shadow-orange-200/50"
             >
-              <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-white" />
+              <img src="/logo.png" alt="Умняут" className="w-full h-full object-cover" />
             </MotionDiv>
             <div className="hidden sm:block text-left">
-              <h1 className="text-sm md:text-xl font-game font-bold text-slate-900 tracking-tight leading-none flex items-center gap-1.5">
-                КРОССКВЕСТ
-                <Zap className="w-3 h-3 md:w-4 md:h-4 text-amber-500 fill-amber-400" />
+              <h1 className="text-sm md:text-xl font-game font-bold text-stone-800 tracking-tight leading-none flex items-center gap-1.5">
+                УМНЯУТ
+                <Zap className="w-3 h-3 md:w-4 md:h-4 text-orange-500 fill-orange-400" />
               </h1>
-              <span className="text-[7px] md:text-[9px] font-black text-indigo-500 uppercase tracking-[0.3em] mt-1 block opacity-70">AI Word Platform</span>
+              <span className="text-[7px] md:text-[9px] font-black text-orange-500 uppercase tracking-[0.3em] mt-1 block opacity-70">Умный кот знает всё</span>
             </div>
           </button>
 
@@ -59,7 +59,7 @@ const Layout: React.FC<LayoutProps> = ({ children, stats, username, onLogoClick,
                 <button onClick={onAccountClick} className="flex items-center gap-3 md:gap-4 pl-4 md:pl-6 border-l border-slate-200 group">
                   <div className="hidden md:flex flex-col items-end">
                     <div className="text-sm text-slate-900 font-bold truncate max-w-[150px]">{username}</div>
-                    <div className="text-[8px] text-indigo-500 font-black uppercase tracking-widest">{levelTitle}</div>
+                    <div className="text-[8px] text-orange-500 font-black uppercase tracking-widest">{levelTitle}</div>
                   </div>
                   <MotionDiv whileHover={{ scale: 1.1 }} className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white border-2 border-white shadow-md">
                     <User className="w-4 h-4 md:w-5 md:h-5" />

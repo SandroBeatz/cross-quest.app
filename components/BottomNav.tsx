@@ -20,21 +20,21 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeView, onViewChange }) => {
       >
         <button 
           onClick={() => onViewChange('DASHBOARD')}
-          className={`p-3 rounded-full transition-all ${activeView === 'DASHBOARD' ? 'bg-indigo-600 text-white scale-110 shadow-lg shadow-indigo-200' : 'text-slate-400 hover:text-indigo-600'}`}
+          className={`p-3 rounded-full transition-all ${activeView === 'DASHBOARD' ? 'bg-orange-500 text-white scale-110 shadow-lg shadow-orange-200' : 'text-slate-400 hover:text-orange-500'}`}
         >
           <Home className="w-6 h-6" />
         </button>
 
         <button 
           onClick={() => onViewChange('GAME')}
-          className={`p-4 rounded-full transition-all -mt-8 ${activeView === 'GAME' ? 'bg-indigo-600 text-white scale-110 shadow-xl shadow-indigo-300' : 'bg-white border-2 border-indigo-50 text-indigo-600 shadow-lg'}`}
+          className={`p-4 rounded-full transition-all -mt-8 ${activeView === 'GAME' ? 'bg-orange-500 text-white scale-110 shadow-xl shadow-orange-300' : 'bg-white border-2 border-orange-100 text-orange-500 shadow-lg'}`}
         >
           <Plus className="w-8 h-8" />
         </button>
 
         <button 
           onClick={() => onViewChange('SETTINGS')}
-          className={`p-3 rounded-full transition-all ${activeView === 'SETTINGS' ? 'bg-indigo-600 text-white scale-110 shadow-lg shadow-indigo-200' : 'text-slate-400 hover:text-indigo-600'}`}
+          className={`p-3 rounded-full transition-all ${activeView === 'SETTINGS' ? 'bg-orange-500 text-white scale-110 shadow-lg shadow-orange-200' : 'text-slate-400 hover:text-orange-500'}`}
         >
           <SettingsIcon className="w-6 h-6" />
         </button>
