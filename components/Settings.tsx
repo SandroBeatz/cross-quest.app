@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { UserProfile, Category } from '../types';
 import { fetchCategories } from '../crosswordApi';

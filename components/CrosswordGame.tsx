@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { CrosswordData, Direction, UserProfile } from '../types';
 import { ListFilter, ArrowDown, ArrowRight, Sparkles, Clock, HelpCircle, X, BrainCircuit, Lightbulb, Pause, Play } from 'lucide-react';

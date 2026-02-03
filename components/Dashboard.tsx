@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { UserProfile, GameHistoryEntry, CrosswordData } from '../types';
 import { generateCrossword } from '../crosswordApi';
