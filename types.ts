@@ -85,6 +85,16 @@ export interface UserProfile {
   createdAt?: string;
 }
 
+export interface SavedGameState {
+  crosswordData: CrosswordData;
+  userGrid: string[][];
+  timer: number;
+  wordPenalties: [number, { hint: boolean; letters: boolean }][];
+  savedAt: string;
+}
+
+export const SAVED_GAME_KEY = 'umnyaut_current_game_state';
+
 export const getLevelTitle = (level: number): string => {
   if (level < 3) return 'Новичок';
   if (level < 5) return 'Эрудит-стажер';

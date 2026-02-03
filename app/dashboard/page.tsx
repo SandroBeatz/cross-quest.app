@@ -38,6 +38,11 @@ export default function DashboardPage() {
     router.push('/game');
   };
 
+  const handleContinueGame = () => {
+    // Navigate to game page - it will load saved state from localStorage
+    router.push('/game');
+  };
+
   return (
     <>
       <Sidebar
@@ -51,7 +56,7 @@ export default function DashboardPage() {
         avatar={profile.avatar}
       />
       <Layout stats={profile.stats}>
-        <Dashboard profile={profile} onStartGame={handleStartGame} />
+        <Dashboard profile={profile} onStartGame={handleStartGame} onContinueGame={handleContinueGame} />
       </Layout>
     </>
   );

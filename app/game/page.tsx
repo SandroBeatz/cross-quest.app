@@ -6,12 +6,13 @@ import { useAppContext } from '../AppContext';
 import CrosswordGame, { GameCompletionStats } from '@/components/CrosswordGame';
 import Layout from '@/components/Layout';
 import Sidebar from '@/components/Sidebar';
-import { CrosswordData, GameHistoryEntry, calculateLevel, STREAK_MILESTONES } from '@/types';
+import { CrosswordData, GameHistoryEntry, calculateLevel, STREAK_MILESTONES, SavedGameState, SAVED_GAME_KEY } from '@/types';
 
 export default function GamePage() {
   const { profile, saveProfile, loading } = useAppContext();
   const router = useRouter();
   const [currentCrossword, setCurrentCrossword] = useState<CrosswordData | null>(null);
+  const [savedGameState, setSavedGameState] = useState<SavedGameState | null>(null);
 
   useEffect(() => {
     if (!loading && !profile) {
@@ -19,7 +20,21 @@ export default function GamePage() {
       return;
     }
 
-    // Retrieve crossword data from sessionStorage
+    // First check for saved game state in localStorage
+    const savedState = localStorage.getItem(SAVED_GAME_KEY);
+    if (savedState) {
+      try {
+        const parsed: SavedGameState = JSON.parse(savedState);
+        setSavedGameState(parsed);
+        setCurrentCrossword(parsed.crosswordData);
+        return;
+      } catch (e) {
+        console.error('Failed to parse saved game state', e);
+        localStorage.removeItem(SAVED_GAME_KEY);
+      }
+    }
+
+    // Otherwise retrieve new crossword data from sessionStorage
     const saved = sessionStorage.getItem('currentCrossword');
     if (saved) {
       try {
@@ -182,6 +197,7 @@ export default function GamePage() {
         <CrosswordGame
           profile={profile}
           crosswordData={currentCrossword}
+          savedState={savedGameState}
           onComplete={handleGameComplete}
           onCancel={handleCancel}
         />

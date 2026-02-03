@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { UserProfile, GameHistoryEntry, CrosswordData } from '../types';
+import React, { useState, useEffect } from 'react';
+import { UserProfile, GameHistoryEntry, CrosswordData, SavedGameState, SAVED_GAME_KEY } from '../types';
 import { generateCrossword } from '../crosswordApi';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import {
@@ -16,6 +16,7 @@ import {
   AlertCircle,
   Settings,
   CheckCircle2,
+  RotateCcw,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -33,13 +34,27 @@ const DIFFICULTY_OPTIONS: { value: Difficulty; label: string; description: strin
 interface DashboardProps {
   profile: UserProfile;
   onStartGame: (data: CrosswordData) => void;
+  onContinueGame?: () => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ profile, onStartGame }) => {
+const Dashboard: React.FC<DashboardProps> = ({ profile, onStartGame, onContinueGame }) => {
   const { stats, history, themeProgress } = profile;
   const [selectedHistory, setSelectedHistory] = useState<GameHistoryEntry | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [savedGame, setSavedGame] = useState<SavedGameState | null>(null);
+
+  // Check for saved game on mount
+  useEffect(() => {
+    const saved = localStorage.getItem(SAVED_GAME_KEY);
+    if (saved) {
+      try {
+        setSavedGame(JSON.parse(saved));
+      } catch (e) {
+        localStorage.removeItem(SAVED_GAME_KEY);
+      }
+    }
+  }, []);
 
   // Game settings modal state
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -116,6 +131,20 @@ const Dashboard: React.FC<DashboardProps> = ({ profile, onStartGame }) => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-start gap-4">
+            {savedGame && onContinueGame && (
+              <MotionButton
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={onContinueGame}
+                className="group bg-emerald-500 text-white px-8 py-4 rounded-2xl font-black text-lg flex items-center gap-4 shadow-lg border-2 border-emerald-400"
+              >
+                <div className="bg-white/20 p-1.5 rounded-full">
+                  <RotateCcw className="w-4 h-4" />
+                </div>
+                ПРОДОЛЖИТЬ
+              </MotionButton>
+            )}
+
             <MotionButton
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
@@ -133,7 +162,7 @@ const Dashboard: React.FC<DashboardProps> = ({ profile, onStartGame }) => {
                   <div className="bg-orange-500 p-1.5 rounded-full group-hover:rotate-90 transition-transform">
                     <Play className="w-4 h-4 fill-white text-white translate-x-0.5" />
                   </div>
-                  ИГРАТЬ
+                  {savedGame ? 'НОВАЯ ИГРА' : 'ИГРАТЬ'}
                 </>
               )}
             </MotionButton>

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { CrosswordData, Direction, UserProfile } from '../types';
+import { CrosswordData, Direction, UserProfile, SavedGameState, SAVED_GAME_KEY } from '../types';
 import {
   ListFilter,
   ArrowDown,
@@ -42,6 +42,7 @@ export interface GameCompletionStats {
 interface CrosswordGameProps {
   profile: UserProfile;
   crosswordData: CrosswordData | null;
+  savedState?: SavedGameState | null;
   onComplete: (stats: GameCompletionStats) => void;
   onCancel: () => void;
 }
@@ -126,15 +127,16 @@ const shuffleWord = (word: string): string => {
 const CrosswordGame: React.FC<CrosswordGameProps> = ({
   profile,
   crosswordData,
+  savedState,
   onComplete,
   onCancel,
 }) => {
-  const [data, setData] = useState<CrosswordData | null>(crosswordData);
-  const [userGrid, setUserGrid] = useState<string[][]>([]);
+  const [data, setData] = useState<CrosswordData | null>(savedState?.crosswordData || crosswordData);
+  const [userGrid, setUserGrid] = useState<string[][]>(savedState?.userGrid || []);
   const [focusedCell, setFocusedCell] = useState<{ r: number; c: number } | null>(null);
   const [activeDirection, setActiveDirection] = useState<Direction>(Direction.HORIZONTAL);
   const [solved, setSolved] = useState(false);
-  const [timer, setTimer] = useState(0);
+  const [timer, setTimer] = useState(savedState?.timer || 0);
   const [showHint, setShowHint] = useState<{
     hint: string;
     word: string;
@@ -143,7 +145,7 @@ const CrosswordGame: React.FC<CrosswordGameProps> = ({
   } | null>(null);
   // Track penalty per word to avoid double-counting
   const [wordPenalties, setWordPenalties] = useState<Map<number, { hint: boolean; letters: boolean }>>(
-    new Map()
+    savedState?.wordPenalties ? new Map(savedState.wordPenalties) : new Map()
   );
   const [isPaused, setIsPaused] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
@@ -160,15 +162,16 @@ const CrosswordGame: React.FC<CrosswordGameProps> = ({
     return Math.min(penalty, 90); // Cap at 90% penalty
   }, [wordPenalties]);
 
+  // Initialize userGrid only if not restored from saved state
   useEffect(() => {
-    if (data) {
+    if (data && userGrid.length === 0) {
       setUserGrid(
         Array(data.grid.length)
           .fill(null)
           .map(() => Array(data.grid[0].length).fill(''))
       );
     }
-  }, [data]);
+  }, [data, userGrid.length]);
 
   useEffect(() => {
     if (!solved && !isPaused) {
@@ -176,6 +179,25 @@ const CrosswordGame: React.FC<CrosswordGameProps> = ({
       return () => clearInterval(interval);
     }
   }, [solved, isPaused]);
+
+  // Auto-save game state
+  useEffect(() => {
+    if (data && userGrid.length > 0 && !solved) {
+      const gameState: SavedGameState = {
+        crosswordData: data,
+        userGrid,
+        timer,
+        wordPenalties: Array.from(wordPenalties.entries()),
+        savedAt: new Date().toISOString(),
+      };
+      localStorage.setItem(SAVED_GAME_KEY, JSON.stringify(gameState));
+    }
+  }, [data, userGrid, timer, wordPenalties, solved]);
+
+  // Clear saved state on completion
+  const clearSavedGame = useCallback(() => {
+    localStorage.removeItem(SAVED_GAME_KEY);
+  }, []);
 
   const solvedWordIds = useMemo(() => {
     if (!data || userGrid.length === 0) return new Set<string>();
@@ -244,6 +266,9 @@ const CrosswordGame: React.FC<CrosswordGameProps> = ({
       // Apply penalty percentage, speed bonus, and accuracy bonus
       const score = Math.max(50, Math.round(baseScore * (1 - totalPenaltyPercent / 100) * speedMultiplier * accuracyMultiplier));
 
+      // Clear saved game state on completion
+      clearSavedGame();
+
       setTimeout(
         () =>
           onComplete({
@@ -265,7 +290,7 @@ const CrosswordGame: React.FC<CrosswordGameProps> = ({
         2000
       );
     }
-  }, [data, solvedWordIds, solved, onComplete, timer, totalPenaltyPercent, wordPenalties, userGrid, profile.stats.averageTime]);
+  }, [data, solvedWordIds, solved, onComplete, timer, totalPenaltyPercent, wordPenalties, userGrid, profile.stats.averageTime, clearSavedGame]);
 
   useEffect(() => {
     if (userGrid.length > 0) checkSolution();
@@ -717,7 +742,10 @@ const CrosswordGame: React.FC<CrosswordGameProps> = ({
                   ПРОДОЛЖИТЬ
                 </button>
                 <button
-                  onClick={onCancel}
+                  onClick={() => {
+                    clearSavedGame();
+                    onCancel();
+                  }}
                   className="flex-1 py-4 bg-red-500 text-white rounded-xl font-black shadow-lg hover:bg-red-600 transition-colors"
                 >
                   ВЫЙТИ
