@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { UserProfile, Category } from '../types';
+import { UserProfile, Category, AgeGroupKey, AGE_GROUPS } from '../types';
 import { fetchCategories } from '../crosswordApi';
 import {
   User,
@@ -45,6 +45,7 @@ const Settings: React.FC<SettingsProps> = ({ profile, onSave }) => {
     profile.defaultDifficulty || 'medium'
   );
   const [soundEnabled, setSoundEnabled] = useState(profile.soundEnabled ?? true);
+  const [ageGroup, setAgeGroup] = useState<AgeGroupKey | undefined>(profile.ageGroup);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadCategories = async () => {
@@ -98,6 +99,7 @@ const Settings: React.FC<SettingsProps> = ({ profile, onSave }) => {
         username: username.trim(),
         selectedCategories: selected,
         avatar,
+        ageGroup,
         defaultDifficulty,
         soundEnabled,
         createdAt: profile.createdAt || new Date().toISOString(),
@@ -168,6 +170,51 @@ const Settings: React.FC<SettingsProps> = ({ profile, onSave }) => {
               className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 font-bold outline-none focus:border-orange-500"
             />
           </div>
+        </div>
+      </div>
+
+      {/* Age Group */}
+      <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+        <div className="flex items-center gap-4 mb-8">
+          <div className="bg-rose-50 p-3 rounded-2xl">
+            <User className="w-6 h-6 text-rose-600" />
+          </div>
+          <h3 className="font-black text-slate-800 text-lg uppercase tracking-tight">
+            Возрастная группа
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {(Object.keys(AGE_GROUPS) as AgeGroupKey[]).map((key) => {
+            const group = AGE_GROUPS[key];
+            const isSelected = ageGroup === key;
+
+            return (
+              <button
+                key={key}
+                onClick={() => setAgeGroup(key)}
+                className={`p-3 sm:p-4 rounded-2xl transition-all text-left ${
+                  isSelected
+                    ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md'
+                    : 'bg-slate-50 border-2 border-slate-100 hover:border-orange-200'
+                }`}
+              >
+                <div className={`font-black text-sm ${isSelected ? 'text-white' : 'text-stone-800'}`}>
+                  {group.label}
+                </div>
+                <div className={`text-[10px] font-medium mt-0.5 ${isSelected ? 'text-white/80' : 'text-slate-400'}`}>
+                  {group.description}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="flex items-start gap-3 bg-amber-50 rounded-xl p-3 border border-amber-100 mt-4">
+          <span className="text-sm">💡</span>
+          <p className="text-sm text-amber-700 font-medium">
+            Изменение возраста может повлиять на доступные категории и сложность слов
+          </p>
         </div>
       </div>
 
