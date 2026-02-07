@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { AppProvider } from './AppContext';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Умняут',
@@ -14,7 +15,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ru">
       <body>
-        <AppProvider>{children}</AppProvider>
+        <AppProvider>
+          {children}
+          <Footer />
+        </AppProvider>
       </body>
     </html>
   );
