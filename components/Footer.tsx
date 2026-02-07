@@ -45,7 +45,7 @@ const Footer: React.FC = () => {
               </li>
               <li>
                 <a
-                  href="/contacts"
+                  href="/contact"
                   className="text-stone-400 hover:text-orange-400 transition-colors text-sm"
                 >
                   Контакты
