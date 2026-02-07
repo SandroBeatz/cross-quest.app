@@ -42,7 +42,6 @@ export default function SettingsPage() {
           if (view === 'SETTINGS') router.push('/settings');
           if (view === 'DASHBOARD') router.push('/dashboard');
           if (view === 'ABOUT') router.push('/about');
-          if (view === 'CONTACT') router.push('/contact');
         }}
         onLogoClick={() => router.push('/')}
         onAccountClick={() => router.push('/settings')}

@@ -1,14 +1,14 @@
 'use client';
 
 import React from 'react';
-import { Home, Settings as SettingsIcon, User, Zap, Info, Mail } from 'lucide-react';
+import { Home, Settings as SettingsIcon, User, Zap, Info } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const MotionDiv = motion.div as any;
 
 interface SidebarProps {
-  activeView: 'DASHBOARD' | 'GAME' | 'SETTINGS' | 'ABOUT' | 'CONTACT';
-  onViewChange: (view: 'DASHBOARD' | 'GAME' | 'SETTINGS' | 'ABOUT' | 'CONTACT') => void;
+  activeView: 'DASHBOARD' | 'GAME' | 'SETTINGS' | 'ABOUT';
+  onViewChange: (view: 'DASHBOARD' | 'GAME' | 'SETTINGS' | 'ABOUT') => void;
   onLogoClick: () => void;
   onAccountClick: () => void;
   avatar?: string;
@@ -24,7 +24,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   const menuItems = [
     { id: 'DASHBOARD' as const, icon: Home, label: 'Главная' },
     { id: 'ABOUT' as const, icon: Info, label: 'О проекте' },
-    { id: 'CONTACT' as const, icon: Mail, label: 'Контакты' },
     { id: 'SETTINGS' as const, icon: SettingsIcon, label: 'Настройки' },
   ];
 
