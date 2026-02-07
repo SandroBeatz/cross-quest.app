@@ -132,38 +132,44 @@ const About: React.FC = () => {
           {[
             {
               icon: Brain,
-              color: 'blue',
+              bgColor: 'bg-blue-100',
+              iconColor: 'text-blue-600',
               title: 'Тренировка мозга',
               description:
                 'Научно доказано: 15 минут в день повышают когнитивные способности на 30%',
             },
             {
               icon: Target,
-              color: 'orange',
+              bgColor: 'bg-orange-100',
+              iconColor: 'text-orange-600',
               title: 'Персонализация',
               description: 'Кроссворды адаптируются под ваши интересы и уровень сложности',
             },
             {
               icon: TrendingUp,
-              color: 'emerald',
+              bgColor: 'bg-emerald-100',
+              iconColor: 'text-emerald-600',
               title: 'Система прогрессии',
               description: 'Отслеживайте свой рост, зарабатывайте очки и повышайте уровень',
             },
             {
               icon: Zap,
-              color: 'amber',
+              bgColor: 'bg-amber-100',
+              iconColor: 'text-amber-600',
               title: 'Ударный режим',
               description: 'Играйте каждый день и получайте бонусы за серии',
             },
             {
               icon: Shield,
-              color: 'purple',
+              bgColor: 'bg-purple-100',
+              iconColor: 'text-purple-600',
               title: 'Облачное хранение',
               description: 'Ваш прогресс синхронизируется между всеми устройствами',
             },
             {
               icon: Users,
-              color: 'pink',
+              bgColor: 'bg-pink-100',
+              iconColor: 'text-pink-600',
               title: 'Сообщество',
               description: 'Присоединяйтесь к тысячам игроков и делитесь достижениями',
             },
@@ -177,9 +183,9 @@ const About: React.FC = () => {
               className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100 hover:shadow-xl transition-shadow"
             >
               <div
-                className={`w-14 h-14 bg-${feature.color}-100 rounded-2xl flex items-center justify-center mb-4`}
+                className={`w-14 h-14 ${feature.bgColor} rounded-2xl flex items-center justify-center mb-4`}
               >
-                <feature.icon className={`w-7 h-7 text-${feature.color}-600`} />
+                <feature.icon className={`w-7 h-7 ${feature.iconColor}`} />
               </div>
               <h3 className="text-xl font-black text-stone-800 mb-2">{feature.title}</h3>
               <p className="text-stone-600 leading-relaxed">{feature.description}</p>
@@ -251,11 +257,26 @@ const About: React.FC = () => {
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {[
-            { icon: Puzzle, name: 'Судоку', color: 'blue' },
-            { icon: Calculator, name: 'Числовые головоломки', color: 'green' },
-            { icon: Target, name: 'Логические задачи', color: 'purple' },
-            { icon: Hash, name: 'Анаграммы', color: 'pink' },
-            { icon: Map, name: 'Словесные ассоциации', color: 'amber' },
+            { icon: Puzzle, name: 'Судоку', bgColor: 'bg-blue-100', iconColor: 'text-blue-600' },
+            {
+              icon: Calculator,
+              name: 'Числовые головоломки',
+              bgColor: 'bg-green-100',
+              iconColor: 'text-green-600',
+            },
+            {
+              icon: Target,
+              name: 'Логические задачи',
+              bgColor: 'bg-purple-100',
+              iconColor: 'text-purple-600',
+            },
+            { icon: Hash, name: 'Анаграммы', bgColor: 'bg-pink-100', iconColor: 'text-pink-600' },
+            {
+              icon: Map,
+              name: 'Словесные ассоциации',
+              bgColor: 'bg-amber-100',
+              iconColor: 'text-amber-600',
+            },
           ].map((game, index) => (
             <MotionDiv
               key={index}
@@ -266,9 +287,9 @@ const About: React.FC = () => {
               className="bg-white rounded-2xl p-6 text-center shadow-lg border border-slate-100 hover:shadow-xl transition-all hover:scale-105"
             >
               <div
-                className={`w-16 h-16 bg-${game.color}-100 rounded-xl flex items-center justify-center mx-auto mb-3`}
+                className={`w-16 h-16 ${game.bgColor} rounded-xl flex items-center justify-center mx-auto mb-3`}
               >
-                <game.icon className={`w-8 h-8 text-${game.color}-600`} />
+                <game.icon className={`w-8 h-8 ${game.iconColor}`} />
               </div>
               <h3 className="font-black text-sm text-stone-800">{game.name}</h3>
               <div className="text-xs text-stone-400 mt-2 font-bold">СКОРО</div>
