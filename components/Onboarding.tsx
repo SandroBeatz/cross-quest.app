@@ -1,25 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Category, AgeGroupKey, AGE_GROUPS, AGE_CATEGORY_MAP } from '../types';
-import { fetchCategories } from '../crosswordApi';
+import React, { useState } from 'react';
+import { AgeGroupKey, AGE_GROUPS } from '../types';
 import {
-  BrainCircuit,
-  Sparkles,
-  Book,
-  History,
-  Palette,
-  Film,
-  Cpu,
-  Globe,
-  Trophy,
-  Music,
-  Leaf,
-  Utensils,
-  FlaskConical,
+  Zap,
   ArrowLeft,
-  RefreshCw,
-  AlertTriangle,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -30,43 +15,13 @@ export interface OnboardingData {
   username: string;
   ageGroup: AgeGroupKey;
   defaultDifficulty: 'easy' | 'medium' | 'hard';
-  categories: string[];
+  selectedGames: string[];
 }
 
 interface OnboardingProps {
   onComplete: (data: OnboardingData) => void;
   onCancel: () => void;
 }
-
-const CATEGORY_ICONS: Record<string, any> = {
-  Наука: FlaskConical,
-  История: History,
-  Искусство: Palette,
-  Кино: Film,
-  'Кино и культура': Film,
-  Технологии: Cpu,
-  География: Globe,
-  Спорт: Trophy,
-  Литература: Book,
-  Музыка: Music,
-  Еда: Utensils,
-  Природа: Leaf,
-  'Природа и садоводство': Leaf,
-  Кулинария: Utensils,
-  Экономика: BrainCircuit,
-  Право: Book,
-  Политика: Globe,
-  Животные: Sparkles,
-  'Цвета и формы': Palette,
-  Транспорт: Cpu,
-  Творчество: Palette,
-  'Советское кино': Film,
-  'Классическая литература': Book,
-  'Классическая музыка': Music,
-  'История СССР/России': History,
-  'Садоводство и огородничество': Leaf,
-  'Живопись и скульптура': Palette,
-};
 
 const DIFFICULTY_OPTIONS = [
   {
@@ -95,56 +50,31 @@ const DIFFICULTY_OPTIONS = [
   },
 ];
 
-// Резервный список на случай ошибки сервера
-const FALLBACK_CATEGORIES: Category[] = [
-  { name: 'Наука', word_count: 150 },
-  { name: 'История', word_count: 200 },
-  { name: 'Технологии', word_count: 120 },
-  { name: 'Спорт', word_count: 180 },
-];
-
 type Step = 1 | 2 | 3 | 4;
 const TOTAL_STEPS = 4;
+
+// Available games
+const AVAILABLE_GAMES = [
+  {
+    id: 'crossquest',
+    name: 'КроссКвест',
+    description: 'Увлекательные кроссворды на разные темы',
+    icon: '🎯',
+    color: 'from-orange-500 to-amber-500',
+  },
+];
 
 const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onCancel }) => {
   const [step, setStep] = useState<Step>(1);
   const [username, setUsername] = useState('');
   const [ageGroup, setAgeGroup] = useState<AgeGroupKey | null>(null);
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
-  const [selected, setSelected] = useState<string[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [selectedGames, setSelectedGames] = useState<string[]>([]);
 
-  const loadCategories = async () => {
-    setLoading(true);
-    setError(false);
-    try {
-      const cats = await fetchCategories();
-      setCategories(cats);
-    } catch (err) {
-      console.error('Could not load categories from API, using fallback', err);
-      setError(true);
-      setCategories(FALLBACK_CATEGORIES);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (step === 4) loadCategories();
-  }, [step]);
-
-  // Filter categories by age group
-  const filteredCategories = ageGroup
-    ? categories.filter((cat) => {
-        const allowedNames = AGE_CATEGORY_MAP[ageGroup];
-        return allowedNames.includes(cat.name);
-      })
-    : categories;
-
-  const toggleCategory = (cat: string) => {
-    setSelected((prev) => (prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]));
+  const toggleGame = (gameId: string) => {
+    setSelectedGames((prev) => 
+      prev.includes(gameId) ? prev.filter((id) => id !== gameId) : [...prev, gameId]
+    );
   };
 
   const isStepValid = (): boolean => {
@@ -152,7 +82,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onCancel }) => {
       case 1: return username.trim().length > 0;
       case 2: return ageGroup !== null;
       case 3: return true; // difficulty always has a value
-      case 4: return selected.length > 0 && !loading;
+      case 4: return selectedGames.length > 0;
     }
   };
 
@@ -165,7 +95,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onCancel }) => {
         username,
         ageGroup: ageGroup!,
         defaultDifficulty: difficulty,
-        categories: selected,
+        selectedGames,
       });
     }
   };
@@ -186,11 +116,11 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onCancel }) => {
   const ageGroupKeys = Object.keys(AGE_GROUPS) as AgeGroupKey[];
 
   return (
-    <div className="min-h-screen bg-orange-500 flex items-center justify-center p-4 sm:p-6 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-orange-400 via-orange-500 to-amber-600 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-orange-400 via-orange-500 to-amber-600 overflow-y-auto">
       <MotionDiv
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="max-w-4xl w-full bg-white rounded-[3rem] shadow-[0_32px_64px_rgba(0,0,0,0.4)] overflow-hidden p-8 sm:p-12 text-center relative border-b-[12px] border-orange-200/50 my-8"
+        className="max-w-4xl w-full bg-white rounded-[3rem] shadow-[0_32px_64px_rgba(0,0,0,0.4)] overflow-hidden p-8 sm:p-12 text-center relative border-b-[12px] border-orange-200/50 my-8 mx-4"
       >
         <button
           onClick={handleBack}
@@ -248,21 +178,6 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onCancel }) => {
                   placeholder="Твое имя..."
                   className="w-full bg-slate-50 border-4 border-slate-100 rounded-3xl px-8 py-6 text-2xl font-black text-stone-800 outline-none focus:border-orange-400 transition-all text-center"
                 />
-              </div>
-
-              <div className="max-w-md mx-auto space-y-3">
-                <div className="flex items-start gap-3 bg-sky-50 rounded-2xl p-4 border border-sky-100">
-                  <span className="text-lg">📌</span>
-                  <p className="text-sm text-sky-700 font-medium">
-                    Ваш прогресс сохраняется в браузере
-                  </p>
-                </div>
-                <div className="flex items-start gap-3 bg-amber-50 rounded-2xl p-4 border border-amber-100">
-                  <span className="text-lg">💡</span>
-                  <p className="text-sm text-amber-700 font-medium">
-                    Хотите играть на разных устройствах? Скоро можно будет создать аккаунт!
-                  </p>
-                </div>
               </div>
             </MotionDiv>
           )}
@@ -397,7 +312,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onCancel }) => {
             </MotionDiv>
           )}
 
-          {/* Step 4: Categories */}
+          {/* Step 4: Game Selection */}
           {step === 4 && (
             <MotionDiv
               key="step4"
@@ -408,82 +323,60 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onCancel }) => {
             >
               <div>
                 <h1 className="text-3xl sm:text-4xl font-game font-bold text-stone-800 mb-2">
-                  Мяу, {username}! Отличное имя!
+                  Выберите игры, которые вам интересны
                 </h1>
-                <p className="text-stone-500 font-medium">Выбери темы, которые тебе интересны</p>
+                <p className="text-stone-500 font-medium">
+                  Пока доступна одна игра, но скоро появятся новые!
+                </p>
               </div>
 
-              {loading ? (
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 animate-pulse">
-                  {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                    <div key={i} className="h-24 bg-slate-100 rounded-2xl" />
-                  ))}
-                </div>
-              ) : (
-                <>
-                  {error && (
-                    <div className="flex items-center gap-2 justify-center bg-amber-50 text-amber-700 p-3 rounded-xl border border-amber-100 mb-4 text-xs font-bold">
-                      <AlertTriangle className="w-4 h-4" />
-                      Сервер временно недоступен. Используем базовые категории.
-                    </div>
-                  )}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                    {filteredCategories.map((cat) => {
-                      const isSelected = selected.includes(cat.name);
-                      const Icon = CATEGORY_ICONS[cat.name] || Sparkles;
+              <div className="flex flex-col gap-4 max-w-xl mx-auto">
+                {AVAILABLE_GAMES.map((game, i) => {
+                  const isSelected = selectedGames.includes(game.id);
 
-                      return (
-                        <MotionButton
-                          key={cat.name}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.96 }}
-                          onClick={() => toggleCategory(cat.name)}
-                          className={`
-                            p-4 rounded-[2rem] border-4 transition-all flex flex-col items-center justify-center gap-2 relative
-                            ${
-                              isSelected
-                                ? 'border-orange-500 bg-orange-50 shadow-lg'
-                                : 'border-slate-50 bg-slate-50 hover:bg-white hover:border-orange-100'
-                            }
-                          `}
-                        >
-                          <div
-                            className={`p-3 rounded-2xl transition-colors ${isSelected ? 'bg-orange-500 text-white' : 'bg-slate-200 text-slate-400'}`}
-                          >
-                            <Icon className="w-5 h-5" />
-                          </div>
-                          <span
-                            className={`font-black text-[10px] uppercase tracking-wider ${isSelected ? 'text-orange-700' : 'text-slate-500'}`}
-                          >
-                            {cat.name}
-                          </span>
-                          <div className="w-full mt-1">
-                            <div className="flex justify-between text-[8px] font-bold mb-1">
-                              <span className={isSelected ? 'text-orange-400' : 'text-slate-400'}>
-                                {cat.guessed_percent || 0}%
-                              </span>
-                            </div>
-                            <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
-                              <div
-                                className={`h-full rounded-full transition-all ${isSelected ? 'bg-indigo-500' : 'bg-slate-300'}`}
-                                style={{ width: `${cat.guessed_percent || 0}%` }}
-                              />
-                            </div>
-                          </div>
-                        </MotionButton>
-                      );
-                    })}
-                  </div>
-                  {error && (
-                    <button
-                      onClick={loadCategories}
-                      className="mt-4 flex items-center gap-2 mx-auto bg-slate-100 text-slate-600 px-6 py-2 rounded-full font-bold text-xs hover:bg-slate-200 transition-all"
+                  return (
+                    <MotionDiv
+                      key={game.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.1 }}
                     >
-                      <RefreshCw className="w-3.5 h-3.5" /> Попробовать восстановить связь
-                    </button>
-                  )}
-                </>
-              )}
+                      <MotionButton
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => toggleGame(game.id)}
+                        className={`
+                          w-full p-6 sm:p-8 rounded-3xl transition-all text-center border-4
+                          ${
+                            isSelected
+                              ? `bg-gradient-to-br ${game.color} text-white shadow-xl border-orange-600`
+                              : 'bg-white border-slate-100 hover:border-orange-200 hover:shadow-md'
+                          }
+                        `}
+                      >
+                        <div className="text-5xl mb-4">{game.icon}</div>
+                        <div
+                          className={`font-black text-2xl mb-2 ${isSelected ? 'text-white' : 'text-stone-800'}`}
+                        >
+                          {game.name}
+                        </div>
+                        <div
+                          className={`text-sm font-medium ${isSelected ? 'text-white/90' : 'text-slate-500'}`}
+                        >
+                          {game.description}
+                        </div>
+                      </MotionButton>
+                    </MotionDiv>
+                  );
+                })}
+              </div>
+
+              <div className="flex items-start gap-3 bg-sky-50 rounded-2xl p-4 border border-sky-100 max-w-md mx-auto">
+                <span className="text-lg">💡</span>
+                <p className="text-sm text-sky-700 font-medium">
+                  Новые игры и режимы скоро появятся!
+                </p>
+              </div>
             </MotionDiv>
           )}
         </AnimatePresence>

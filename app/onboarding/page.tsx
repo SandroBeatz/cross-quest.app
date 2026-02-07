@@ -21,11 +21,8 @@ export default function OnboardingPage() {
       username: data.username,
       ageGroup: data.ageGroup,
       defaultDifficulty: data.defaultDifficulty,
-      selectedCategories: data.categories,
-      themeProgress: data.categories.reduce((acc, cat) => {
-        acc[cat] = { completedWords: [], totalWords: 100 };
-        return acc;
-      }, {} as any),
+      selectedCategories: [], // Categories will be selected in the game
+      themeProgress: {},
       stats: INITIAL_STATS,
       history: [],
       solvedCrosswordIds: [],
@@ -45,10 +42,6 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-orange-50 text-stone-800">
-      <main className="max-w-7xl mx-auto px-6 py-6 md:py-12">
-        <Onboarding onComplete={handleOnboardingComplete} onCancel={handleCancel} />
-      </main>
-    </div>
+    <Onboarding onComplete={handleOnboardingComplete} onCancel={handleCancel} />
   );
 }
