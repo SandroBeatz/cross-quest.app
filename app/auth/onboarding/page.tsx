@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAppContext, INITIAL_STATS } from '../AppContext';
+import { useAppContext, INITIAL_STATS } from '../../AppContext';
 import Onboarding, { OnboardingData } from '@/components/Onboarding';
 import { UserProfile } from '@/types';
 
@@ -12,7 +12,7 @@ export default function OnboardingPage() {
 
   useEffect(() => {
     if (!loading && profile) {
-      router.push('/dashboard');
+      router.push('/p/dashboard');
     }
   }, [profile, loading, router]);
 
@@ -30,7 +30,7 @@ export default function OnboardingPage() {
       createdAt: new Date().toISOString(),
     };
     saveProfile(newProfile);
-    router.push('/dashboard');
+    router.push('/p/dashboard');
   };
 
   const handleCancel = () => {

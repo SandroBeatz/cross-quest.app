@@ -2,10 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAppContext } from '../AppContext';
+import { useAppContext } from '../../../../AppContext';
 import CrosswordGame, { GameCompletionStats } from '@/components/CrosswordGame';
-import Layout from '@/components/Layout';
-import Sidebar from '@/components/Sidebar';
 import {
   CrosswordData,
   GameHistoryEntry,
@@ -48,10 +46,10 @@ export default function GamePage() {
         setCurrentCrossword(JSON.parse(saved));
       } catch (e) {
         console.error('Failed to parse crossword data', e);
-        router.push('/dashboard');
+        router.push('/p/dashboard');
       }
     } else {
-      router.push('/dashboard');
+      router.push('/p/dashboard');
     }
   }, [profile, loading, router]);
 
@@ -172,12 +170,12 @@ export default function GamePage() {
 
     saveProfile(updatedProfile);
     sessionStorage.removeItem('currentCrossword');
-    router.push('/dashboard');
+    router.push('/p/dashboard');
   };
 
   const handleCancel = () => {
     sessionStorage.removeItem('currentCrossword');
-    router.push('/dashboard');
+    router.push('/p/dashboard');
   };
 
   if (loading || !profile || !currentCrossword) {
@@ -189,30 +187,12 @@ export default function GamePage() {
   }
 
   return (
-    <>
-      <Sidebar
-        activeView="GAME"
-        onViewChange={(view) => {
-          if (view === 'SETTINGS') router.push('/settings');
-          if (view === 'DASHBOARD') router.push('/dashboard');
-          if (view === 'ABOUT') router.push('/about');
-          if (view === 'STATISTICS') router.push('/statistics');
-          if (view === 'GAME') router.push('/game');
-        }}
-        onLogoClick={() => router.push('/')}
-        onAccountClick={() => router.push('/settings')}
-        avatar={profile.avatar}
-        username={profile.username}
-      />
-      <Layout stats={profile.stats}>
-        <CrosswordGame
-          profile={profile}
-          crosswordData={currentCrossword}
-          savedState={savedGameState}
-          onComplete={handleGameComplete}
-          onCancel={handleCancel}
-        />
-      </Layout>
-    </>
+    <CrosswordGame
+      profile={profile}
+      crosswordData={currentCrossword}
+      savedState={savedGameState}
+      onComplete={handleGameComplete}
+      onCancel={handleCancel}
+    />
   );
 }

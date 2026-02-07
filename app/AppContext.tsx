@@ -24,8 +24,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Helper function to set authentication cookie
+  const setAuthCookie = (isAuthenticated: boolean) => {
+    if (typeof document !== 'undefined') {
+      document.cookie = `umnyaut_authenticated=${isAuthenticated}; path=/; max-age=${365 * 24 * 60 * 60}`;
+    }
+  };
+
   useEffect(() => {
-    const saved = localStorage.getItem('umnyaut_profile');
+    const saved = localStorage.getItem('umnyaut_user_profile');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -40,16 +47,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
         if (!parsed.createdAt) parsed.createdAt = new Date().toISOString();
         // ageGroup intentionally not defaulted — undefined triggers age selection prompt
         setProfile(parsed);
+        setAuthCookie(true);
       } catch (e) {
         console.error('Profile parse error', e);
+        setAuthCookie(false);
       }
+    } else {
+      setAuthCookie(false);
     }
     setLoading(false);
   }, []);
 
   const saveProfile = (newProfile: UserProfile) => {
     setProfile(newProfile);
-    localStorage.setItem('umnyaut_profile', JSON.stringify(newProfile));
+    localStorage.setItem('umnyaut_user_profile', JSON.stringify(newProfile));
+    setAuthCookie(true);
   };
 
   return (
