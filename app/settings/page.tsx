@@ -41,6 +41,7 @@ export default function SettingsPage() {
         onViewChange={(view) => {
           if (view === 'SETTINGS') router.push('/settings');
           if (view === 'DASHBOARD') router.push('/dashboard');
+          if (view === 'ABOUT') router.push('/about');
         }}
         onLogoClick={() => router.push('/')}
         onAccountClick={() => router.push('/settings')}

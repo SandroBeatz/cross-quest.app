@@ -6,7 +6,14 @@ import { useAppContext } from '../AppContext';
 import CrosswordGame, { GameCompletionStats } from '@/components/CrosswordGame';
 import Layout from '@/components/Layout';
 import Sidebar from '@/components/Sidebar';
-import { CrosswordData, GameHistoryEntry, calculateLevel, STREAK_MILESTONES, SavedGameState, SAVED_GAME_KEY } from '@/types';
+import {
+  CrosswordData,
+  GameHistoryEntry,
+  calculateLevel,
+  STREAK_MILESTONES,
+  SavedGameState,
+  SAVED_GAME_KEY,
+} from '@/types';
 
 export default function GamePage() {
   const { profile, saveProfile, loading } = useAppContext();
@@ -188,6 +195,7 @@ export default function GamePage() {
         onViewChange={(view) => {
           if (view === 'SETTINGS') router.push('/settings');
           if (view === 'DASHBOARD') router.push('/dashboard');
+          if (view === 'ABOUT') router.push('/about');
         }}
         onLogoClick={() => router.push('/')}
         onAccountClick={() => router.push('/settings')}

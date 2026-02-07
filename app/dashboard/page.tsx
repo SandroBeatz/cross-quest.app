@@ -50,13 +50,18 @@ export default function DashboardPage() {
         onViewChange={(view) => {
           if (view === 'SETTINGS') router.push('/settings');
           if (view === 'DASHBOARD') router.push('/dashboard');
+          if (view === 'ABOUT') router.push('/about');
         }}
         onLogoClick={() => router.push('/')}
         onAccountClick={() => router.push('/settings')}
         avatar={profile.avatar}
       />
       <Layout stats={profile.stats}>
-        <Dashboard profile={profile} onStartGame={handleStartGame} onContinueGame={handleContinueGame} />
+        <Dashboard
+          profile={profile}
+          onStartGame={handleStartGame}
+          onContinueGame={handleContinueGame}
+        />
       </Layout>
     </>
   );
