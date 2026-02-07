@@ -3,11 +3,11 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppContext } from '../AppContext';
-import About from '@/components/About';
+import Contact from '@/components/Contact';
 import Layout from '@/components/Layout';
 import Sidebar from '@/components/Sidebar';
 
-export default function AboutPage() {
+export default function ContactPage() {
   const { profile } = useAppContext();
   const router = useRouter();
 
@@ -16,7 +16,7 @@ export default function AboutPage() {
     return (
       <>
         <Sidebar
-          activeView="ABOUT"
+          activeView="CONTACT"
           onViewChange={(view) => {
             if (view === 'SETTINGS') router.push('/settings');
             if (view === 'DASHBOARD') router.push('/dashboard');
@@ -28,7 +28,7 @@ export default function AboutPage() {
           avatar={profile.avatar}
         />
         <Layout stats={profile.stats}>
-          <About />
+          <Contact />
         </Layout>
       </>
     );
@@ -38,7 +38,7 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-orange-50 text-stone-800">
       <main className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-12">
-        <About />
+        <Contact />
       </main>
     </div>
   );
