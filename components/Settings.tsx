@@ -16,6 +16,7 @@ import {
   BarChart3,
   Calendar,
   Trophy,
+  Bell,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -45,6 +46,10 @@ const Settings: React.FC<SettingsProps> = ({ profile, onSave }) => {
     profile.defaultDifficulty || 'medium'
   );
   const [soundEnabled, setSoundEnabled] = useState(profile.soundEnabled ?? true);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(
+    profile.notificationsEnabled ?? false
+  );
+  const [reminderTime, setReminderTime] = useState(profile.reminderTime ?? '19:00');
   const [ageGroup, setAgeGroup] = useState<AgeGroupKey | undefined>(profile.ageGroup);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -102,6 +107,8 @@ const Settings: React.FC<SettingsProps> = ({ profile, onSave }) => {
         ageGroup,
         defaultDifficulty,
         soundEnabled,
+        notificationsEnabled,
+        reminderTime: notificationsEnabled ? reminderTime : undefined,
         createdAt: profile.createdAt || new Date().toISOString(),
       });
     }
@@ -363,6 +370,75 @@ const Settings: React.FC<SettingsProps> = ({ profile, onSave }) => {
               </div>
             </button>
           </div>
+        </div>
+      </div>
+
+      {/* Notifications */}
+      <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+        <div className="flex items-center gap-4 mb-8">
+          <div className="bg-amber-50 p-3 rounded-2xl">
+            <Bell className="w-6 h-6 text-amber-600" />
+          </div>
+          <h3 className="font-black text-slate-800 text-lg uppercase tracking-tight">
+            Уведомления
+          </h3>
+        </div>
+
+        <div className="space-y-6">
+          <div>
+            <label className="block text-xs font-black text-slate-400 uppercase tracking-widest px-2 mb-3">
+              Напоминать о серии
+            </label>
+            <button
+              onClick={() => setNotificationsEnabled(!notificationsEnabled)}
+              className={`w-full p-4 rounded-xl border-2 transition-all flex items-center justify-between ${
+                notificationsEnabled
+                  ? 'border-emerald-500 bg-emerald-50'
+                  : 'border-slate-200 bg-slate-50'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Bell
+                  className={`w-5 h-5 ${notificationsEnabled ? 'text-emerald-600' : 'text-slate-400'}`}
+                />
+                <div className="text-left">
+                  <span
+                    className={`font-bold block ${notificationsEnabled ? 'text-emerald-700' : 'text-slate-500'}`}
+                  >
+                    {notificationsEnabled ? 'Включены' : 'Выключены'}
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-medium">
+                    Получайте напоминание чтобы не потерять ударный режим
+                  </span>
+                </div>
+              </div>
+              <div
+                className={`w-12 h-7 rounded-full p-1 transition-colors ${
+                  notificationsEnabled ? 'bg-emerald-500' : 'bg-slate-300'
+                }`}
+              >
+                <div
+                  className={`w-5 h-5 rounded-full bg-white shadow transition-transform ${
+                    notificationsEnabled ? 'translate-x-5' : 'translate-x-0'
+                  }`}
+                />
+              </div>
+            </button>
+          </div>
+
+          {notificationsEnabled && (
+            <div>
+              <label className="block text-xs font-black text-slate-400 uppercase tracking-widest px-2 mb-3">
+                Время напоминания
+              </label>
+              <input
+                type="time"
+                value={reminderTime}
+                onChange={(e) => setReminderTime(e.target.value)}
+                className="bg-slate-50 border-2 border-slate-100 rounded-xl px-6 py-4 font-bold outline-none focus:border-orange-500"
+              />
+            </div>
+          )}
         </div>
       </div>
 
