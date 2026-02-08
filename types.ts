@@ -125,8 +125,6 @@ export interface UserProfile {
   ageGroup?: AgeGroupKey;
   defaultDifficulty?: 'easy' | 'medium' | 'hard';
   soundEnabled?: boolean;
-  notificationsEnabled?: boolean;
-  reminderTime?: string;
   createdAt?: string;
 }
 

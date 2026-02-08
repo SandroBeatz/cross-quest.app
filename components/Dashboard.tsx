@@ -7,9 +7,6 @@ import {
   CrosswordData,
   SavedGameState,
   SAVED_GAME_KEY,
-  CATEGORY_ICONS,
-  calculateLevel,
-  getLevelTitle,
 } from '../types';
 import { generateCrossword } from '../crosswordApi';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
@@ -26,10 +23,6 @@ import {
   Settings,
   CheckCircle2,
   RotateCcw,
-  Flame,
-  Star,
-  Target,
-  Plus,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -96,17 +89,19 @@ const Dashboard: React.FC<DashboardProps> = ({ profile, onStartGame, onContinueG
     setIsSettingsOpen(true);
   };
 
-  const handleGenerate = async (category?: string, difficulty?: Difficulty) => {
-    const cat = category || selectedCategory;
-    const diff = difficulty || selectedDifficulty;
+  const handleGenerate = async () => {
     setIsSettingsOpen(false);
     setIsGenerating(true);
     setError(null);
     try {
-      const categoryProgress = themeProgress[cat];
+      const categoryProgress = themeProgress[selectedCategory];
       const excludedWords = categoryProgress?.completedWords || [];
 
-      const crosswordData = await generateCrossword(cat, diff, excludedWords);
+      const crosswordData = await generateCrossword(
+        selectedCategory,
+        selectedDifficulty,
+        excludedWords
+      );
       onStartGame(crosswordData);
     } catch (err: any) {
       if (err.message === 'CATEGORY_NOT_FOUND') {
@@ -142,51 +137,13 @@ const Dashboard: React.FC<DashboardProps> = ({ profile, onStartGame, onContinueG
             </span>
           </MotionDiv>
 
-          <h2 className="text-3xl md:text-5xl font-game font-bold mb-3 leading-tight tracking-tight">
-            {profile.ageGroup === 'kids'
-              ? `${profile.username}, давай играть!`
-              : profile.ageGroup === 'senior'
-                ? `Добро пожаловать, ${profile.username}!`
-                : `Привет, ${profile.username}!`}
+          <h2 className="text-3xl md:text-5xl font-game font-bold mb-4 leading-tight tracking-tight">
+            Готовы к новому <br /> испытанию?
           </h2>
 
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-white/80 mb-3">
-            <span className="flex items-center gap-1">
-              <Flame className="w-4 h-4 text-orange-200" />
-              {stats.streak} дн.
-            </span>
-            <span className="text-white/40">•</span>
-            <span className="flex items-center gap-1">
-              <Star className="w-4 h-4 text-orange-200" />
-              {stats.points} очков
-            </span>
-            <span className="text-white/40">•</span>
-            <span>Уровень {calculateLevel(stats)}</span>
-          </div>
-
-          {profile.defaultDifficulty && (
-            <div className="flex items-center gap-2 mb-8">
-              <span
-                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${
-                  profile.defaultDifficulty === 'easy'
-                    ? 'bg-emerald-400/20 text-emerald-100'
-                    : profile.defaultDifficulty === 'hard'
-                      ? 'bg-red-400/20 text-red-100'
-                      : 'bg-amber-400/20 text-amber-100'
-                }`}
-              >
-                <Target className="w-3 h-3" />
-                Сложность:{' '}
-                {profile.defaultDifficulty === 'easy'
-                  ? 'Легкий'
-                  : profile.defaultDifficulty === 'hard'
-                    ? 'Сложный'
-                    : 'Средний'}
-              </span>
-            </div>
-          )}
-
-          {!profile.defaultDifficulty && <div className="mb-8" />}
+          <p className="text-orange-100 mb-8 text-sm md:text-base opacity-80 font-medium">
+            Умняут готов создать персональную головоломку на основе ваших интересов.
+          </p>
 
           <div className="flex flex-col sm:flex-row items-start gap-4">
             {savedGame && onContinueGame && (
@@ -237,43 +194,6 @@ const Dashboard: React.FC<DashboardProps> = ({ profile, onStartGame, onContinueG
           <Brain className="w-80 h-80 text-white rotate-6" />
         </div>
       </MotionDiv>
-
-      {/* Level Progress Bar */}
-      {(() => {
-        const level = calculateLevel(stats);
-        const levelTitle = getLevelTitle(level);
-        const currentLevelBase = level * 500;
-        const nextLevelBase = (level + 1) * 500;
-        const xpInLevel = Math.max(0, stats.points - currentLevelBase);
-        const xpNeeded = 500;
-        const xpPercent = Math.min(100, Math.round((xpInLevel / xpNeeded) * 100));
-        return (
-          <MotionDiv
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.1 }}
-            className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-black text-slate-800">Уровень {level}:</span>
-                <span className="text-sm text-slate-500 font-medium">{levelTitle}</span>
-              </div>
-              <span className="text-xs font-bold text-slate-400">
-                {xpInLevel} / {xpNeeded} XP
-              </span>
-            </div>
-            <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
-              <MotionDiv
-                initial={{ width: 0 }}
-                animate={{ width: `${xpPercent}%` }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-                className="h-full bg-gradient-to-r from-orange-400 to-amber-400 rounded-full"
-              />
-            </div>
-          </MotionDiv>
-        );
-      })()}
 
       {/* Stats and Progress */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -359,69 +279,32 @@ const Dashboard: React.FC<DashboardProps> = ({ profile, onStartGame, onContinueG
               <h3 className="font-black text-slate-800 text-xs uppercase tracking-widest mb-6">
                 Прогресс тем
               </h3>
-              {profile.selectedCategories.length === 0 ? (
-                <p className="text-sm text-slate-400 text-center py-4">
-                  Выберите категории в настройках
-                </p>
-              ) : (
-                <div className="space-y-3">
-                  {profile.selectedCategories.map((cat) => {
-                    const progress = themeProgress[cat] || {
-                      completedWords: [],
-                      totalWords: 100,
-                    };
-                    const percent = Math.min(
-                      100,
-                      Math.round((progress.completedWords.length / progress.totalWords) * 100)
-                    );
-                    const isLastPlayed =
-                      history.length > 0 && history[history.length - 1]?.category === cat;
-                    const icon = CATEGORY_ICONS[cat] || '📋';
-                    return (
-                      <div
-                        key={cat}
-                        className="p-4 rounded-2xl border border-slate-100 hover:shadow-lg transition-shadow bg-white shadow-md"
-                      >
-                        <div className="flex items-start justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <span className="text-lg">{icon}</span>
-                            <span className="font-bold text-slate-700 text-sm">{cat}</span>
-                          </div>
-                          {isLastPlayed && (
-                            <span className="text-[10px] bg-orange-100 text-orange-600 rounded-full px-2 py-0.5 font-bold">
-                              Последняя
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-[10px] font-bold text-slate-400 mb-2">
-                          {progress.completedWords.length} / {progress.totalWords} слов
-                        </div>
-                        <div className="h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200 mb-3">
-                          <MotionDiv
-                            initial={{ width: 0 }}
-                            animate={{ width: `${percent}%` }}
-                            className="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full"
-                          />
-                        </div>
-                        <button
-                          onClick={() => handleGenerate(cat, profile.defaultDifficulty || 'medium')}
-                          disabled={isGenerating}
-                          className="text-orange-600 font-bold text-sm hover:text-orange-700 transition-colors disabled:opacity-50"
-                        >
-                          {isLastPlayed ? '🔥 Продолжить →' : 'Продолжить →'}
-                        </button>
+              <div className="space-y-5">
+                {profile.selectedCategories.map((cat) => {
+                  const progress = themeProgress[cat] || { completedWords: [], totalWords: 100 };
+                  const percent = Math.min(
+                    100,
+                    Math.round((progress.completedWords.length / progress.totalWords) * 100)
+                  );
+                  return (
+                    <div key={cat} className="space-y-1.5">
+                      <div className="flex justify-between items-end">
+                        <span className="font-bold text-slate-700 text-[10px] uppercase tracking-wider">
+                          {cat}
+                        </span>
+                        <span className="text-[9px] font-black text-orange-600">{percent}%</span>
                       </div>
-                    );
-                  })}
-                  <button
-                    onClick={handleOpenSettings}
-                    className="w-full p-3 rounded-xl border-2 border-dashed border-slate-200 text-slate-400 text-sm font-bold hover:border-orange-300 hover:text-orange-500 transition-colors flex items-center justify-center gap-2"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Добавить категорию
-                  </button>
-                </div>
-              )}
+                      <div className="h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
+                        <MotionDiv
+                          initial={{ width: 0 }}
+                          animate={{ width: `${percent}%` }}
+                          className="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full"
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
